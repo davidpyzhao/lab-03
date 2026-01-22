@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements
         cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AddCityFragment addCityFragment = AddCityFragment.newInstance(position);
+                City editingCity = dataList.get(position);
+                AddCityFragment addCityFragment = AddCityFragment.newInstance(editingCity, position);
                 addCityFragment.show(getSupportFragmentManager(), "Edit City");
 
             }
