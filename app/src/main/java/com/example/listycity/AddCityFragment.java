@@ -20,7 +20,7 @@ public class AddCityFragment extends DialogFragment {
         void editCity(int pos, City newCityEdits);
     }
     private AddCityDialogListener listener;
-    static AddCityFragment newInstance(City city, int position){
+    static AddCityFragment newInstance(int position){
         Bundle bundle = new Bundle();
         AddCityFragment addCityFragment = new AddCityFragment();
         bundle.putInt("city", position);
@@ -57,6 +57,9 @@ public class AddCityFragment extends DialogFragment {
                     if(args != null){
                         if(args.containsKey("city")){
                             listener.editCity(args.getInt("city"), new City(cityName, provinceName));
+                        }
+                        else{
+                            listener.addCity( new City(cityName, provinceName));
                         }
                     }else {
                         listener.addCity(new City(cityName, provinceName));
