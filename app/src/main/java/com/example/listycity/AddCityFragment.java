@@ -12,11 +12,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.io.Serializable;
+
 public class AddCityFragment extends DialogFragment {
     interface AddCityDialogListener {
         void addCity(City city);
+        void editCity(int pos, City newCityEdits);
     }
     private AddCityDialogListener listener;
+    static AddCityFragment newInstance(City city, int position){
+        Bundle bundle = new Bundle();
+        AddCityFragment addCityFragment = new AddCityFragment();
+        bundle.putInt("city", position);
+        addCityFragment.setArguments(bundle);
+        return addCityFragment;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -30,6 +41,7 @@ public class AddCityFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Bundle args = getArguments();
         View view =
                 LayoutInflater.from(getContext()).inflate(R.layout.fragment_add_city, null);
         EditText editCityName = view.findViewById(R.id.edit_text_city_text);
@@ -37,12 +49,18 @@ public class AddCityFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Add a city")
+                .setTitle("Add/Edit a city")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Add", (dialog, which) -> {
+                .setPositiveButton("Ok", (dialog, which) -> {
                     String cityName = editCityName.getText().toString();
                     String provinceName = editProvinceName.getText().toString();
-                    listener.addCity(new City(cityName, provinceName));
+                    if(args != null){
+                        if(args.containsKey("city")){
+                            listener.editCity(args.getInt("city"), new City(cityName, provinceName));
+                        }
+                    }else {
+                        listener.addCity(new City(cityName, provinceName));
+                    }
                 })
                 .create();
     }

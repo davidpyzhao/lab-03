@@ -1,6 +1,8 @@
 package com.example.listycity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -8,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         AddCityFragment.AddCityDialogListener{
@@ -22,6 +26,13 @@ public class MainActivity extends AppCompatActivity implements
         cityAdapter.add(city);
         cityAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void editCity(int pos, City newCityChanges) {
+        dataList.set(pos, newCityChanges);
+        cityAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +48,17 @@ public class MainActivity extends AppCompatActivity implements
 
         cityList = findViewById(R.id.city_list);
         cityAdapter = new CityArrayAdapter(this, dataList);
-        cityList.setAdapter(cityAdapter);
+        cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                City cityToEdit = dataList.get(position);
+                AddCityFragment addCityFragment = AddCityFragment.newInstance(cityToEdit, position);
+                addCityFragment.show(getSupportFragmentManager(), "Edit City");
 
+            }
+        });
+
+        cityList.setAdapter(cityAdapter);
         FloatingActionButton fab = findViewById(R.id.button_add_city);
         fab.setOnClickListener(v -> {
             new AddCityFragment().show(getSupportFragmentManager(), "Add City");
