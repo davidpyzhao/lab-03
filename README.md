@@ -15,3 +15,6 @@ List any resources used here, or simply put `N/A` if not applicable.
 | ------------ | --------- |
 | Yaaqoob | yaaqoob |
 
+## Notes
+
+I moved the files needed to run the code outside of the code folder. Implimentation is within the app folder
